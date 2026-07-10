@@ -15,24 +15,39 @@ class JenisPesertasTable
     {
         return $table
             ->columns([
-                TextColumn::make('user_id')
-                    ->numeric()
+                TextColumn::make('user.name')
+                    ->label('Nama Peserta')
+                    ->alignCenter()
                     ->sortable(),
                 TextColumn::make('jenis_peserta')
-                    ->badge(),
+                    ->alignCenter()
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'reg' => 'info',
+                        'blk' => 'warning',
+                    }),
                 TextColumn::make('status')
-                    ->badge(),
+                    ->alignCenter()
+                    ->badge()
+                    ->color(fn(string $state): string => match ($state) {
+                        'aktif' => 'success',
+                        'tidak_aktif' => 'danger',
+                    }),
                 TextColumn::make('nilai')
+                    ->alignCenter()
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('progress')
+                    ->alignCenter()
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('created_at')
+                    ->alignCenter()
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
+                    ->alignCenter()
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
