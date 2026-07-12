@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\JenisPesertas\Tables;
 
+use App\Models\JenisPeserta;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -58,6 +60,12 @@ class JenisPesertasTable
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
+                Action::make('raport')
+                    ->label('PDF File')
+                    ->color('danger')
+                    ->icon('heroicon-o-folder-arrow-down')
+                    ->url(fn(JenisPeserta $record) => route('raport', $record))
+                    ->openUrlInNewTab(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
