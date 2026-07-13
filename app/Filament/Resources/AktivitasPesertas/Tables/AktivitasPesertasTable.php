@@ -2,10 +2,20 @@
 
 namespace App\Filament\Resources\AktivitasPesertas\Tables;
 
+use App\Models\AktivitasPeserta;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Notifications\Notification;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -42,8 +52,67 @@ class AktivitasPesertasTable
                 //
             ])
             ->recordActions([
-                ViewAction::make(),
+                // ViewAction::make(),
                 EditAction::make(),
+                Action::make('Validasi')
+                    ->label('Validasi')
+                    ->icon('heroicon-o-check-circle')
+                    ->color('success')
+                    ->modalHeading('Validasi Aktivitas')
+                    ->modalDescription('Periksa aktivitas peserta, lalu pilih Setujui atau Ditolak.')
+                    ->schema([
+                        Grid::make(2)
+                            ->schema([
+                                Section::make('Data Aktivitas')
+                                    ->schema([
+                                        Grid::make(2)
+                                            ->schema([
+                                                ImageEntry::make('attachment')
+                                                    ->hiddenLabel()
+                                                    ->disk('public'),
+                                                Section::make()
+                                                    ->schema([
+                                                        TextEntry::make('jenis_peserta.user.name')
+                                                            ->label('Nama Peserta'),
+                                                        TextEntry::make('materi_pelatihan.judul')
+                                                            ->label('Materi Pelatihan'),
+                                                        TextEntry::make('instruktur.name')
+                                                            ->label('Nama Instruktur'),
+                                                        TextEntry::make('jenis_peserta.jenis_peserta')
+                                                            ->label('Jenis Peserta')
+                                                            ->badge(),
+                                                    ])->contained(false),
+                                            ])
+                                    ]),
+                                Section::make('Validasi')
+                                    ->schema([
+                                        Textarea::make('deskripsi')
+                                            ->label('catatan')
+                                            ->default(fn($record) => $record->deskripsi)
+                                            ->rows(4)
+                                            ->maxLength(1000)
+                                            ->placeholder('Tambahkan catatan validasi...')
+                                            ->required(),
+                                        Select::make('status')
+                                            ->default('disetujui')
+                                            ->options([
+                                                'disetujui' => 'Setuju',
+                                                'ditolak' => 'Tolak'
+                                            ])
+                                    ]),
+                            ]),
+                    ])
+                    ->action(function (array $data, AktivitasPeserta $record): void {
+                        $record->update([
+                            'status' => $data['status'],
+                            'deskripsi' => $data['deskripsi']
+                        ]);
+
+                        Notification::make()
+                            ->title("Aktivitas berhasil {$data['status']}.")
+                            ->success()
+                            ->send();
+                    }),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
