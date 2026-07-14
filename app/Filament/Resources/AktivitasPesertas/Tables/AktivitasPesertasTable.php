@@ -18,12 +18,21 @@ use Filament\Schemas\Components\Section;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class AktivitasPesertasTable
 {
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(function (Builder $query) {
+                $user = Auth::user();
+
+                if ($user->role === 'instruktur') {
+                    $query->where('instruktur_id', $user->id);
+                }
+            })
             ->columns([
                 TextColumn::make('jenis_peserta.jenis_peserta')
                     ->numeric()

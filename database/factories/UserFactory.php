@@ -30,9 +30,10 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'role' => 'peserta',
-            'address' => 'Magelang',
-            'email' => 'muhammadarief379@gmail.com',
-            'remember_token' => Str::random(10),
+            'alamat' => 'Magelang',
+            'no_hp' => '085' . rand(00000000, 99999999),
+            'email' => fake()->unique()->safeEmail(), //'muhammadarief379@gmail.com',
+            'remember_token' => null  //Str::random(10),
         ];
     }
 

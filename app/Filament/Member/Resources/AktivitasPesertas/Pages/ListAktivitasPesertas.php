@@ -3,6 +3,7 @@
 namespace App\Filament\Member\Resources\AktivitasPesertas\Pages;
 
 use App\Filament\Member\Resources\AktivitasPesertas\AktivitasPesertaResource;
+use App\Models\JenisPeserta;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,9 +15,13 @@ class ListAktivitasPesertas extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        return [
-            CreateAction::make(),
-        ];
+        if (JenisPeserta::where('user_id', Auth::user()->id)->first()) {
+            return [
+                CreateAction::make(),
+            ];
+        }
+
+        return [];
     }
 
     protected function getTableQuery(): ?Builder

@@ -14,17 +14,24 @@ class MemberStatsOverview extends StatsOverviewWidget
     protected static ?int $sort = 1;
     protected function getStats(): array
     {
-        $activeProgram = JenisPeserta::where('user_id', Auth::user()->id)->where('status', 'aktif')->latest()->first()->jenis_peserta;
-        $totalMateri = MateriPelatihan::count();
+        $activeProgram = JenisPeserta::where('user_id', Auth::user()->id)->where('status', 'aktif')->latest()->first()->jenis_peserta ?? '-';
+        if ($activeProgram === 'reg') {
+            $activeProgram = 'Reguler';
+        } elseif ($activeProgram === 'reg') {
+            $activeProgram = 'BLK';
+        } else {
+            $activeProgram = '-';
+        }
+        $totalMateri = $activeProgram === '-' ? '-' : MateriPelatihan::count();
 
-        $jenisPesertaAktifTerbaruId = JenisPeserta::where('user_id', Auth::user()->id)->where('status', 'aktif')
+        $jenisPesertaAktifTerbaruId = $activeProgram === '-' ? '-' : JenisPeserta::where('user_id', Auth::user()->id)->where('status', 'aktif')
             ->latest()
             ->value('id');
-        $progressDisetujui = AktivitasPeserta::where('jenis_peserta_id', $jenisPesertaAktifTerbaruId)->where('status', 'disetujui')->count() ?? 0;
-        $progressProses = AktivitasPeserta::where('jenis_peserta_id', $jenisPesertaAktifTerbaruId)->where('status', 'menunggu')->count() ?? 0;
+        $progressDisetujui = $activeProgram === '-' ? '-' : AktivitasPeserta::where('jenis_peserta_id', $jenisPesertaAktifTerbaruId)->where('status', 'disetujui')->count();
+        $progressProses = $activeProgram === '-' ? '-' : AktivitasPeserta::where('jenis_peserta_id', $jenisPesertaAktifTerbaruId)->where('status', 'menunggu')->count();
 
         return [
-            Stat::make('Program Aktif', $activeProgram === 'reg' ? 'Reguler' : 'BLK'),
+            Stat::make('Program Aktif', $activeProgram),
             Stat::make('Total Materi', $totalMateri),
             Stat::make('Pembelajaran Selesai', $progressDisetujui),
             Stat::make('Pembelajaran Proses', $progressProses),
