@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\Auth;
 
 class ProgressPesertaTable extends TableWidget
 {
-    protected static ?int $sort = 2;
+    protected static ?int $sort = 3;
     protected static ?string $title = 'Akttivitas Peserta Terakhir';
-    protected int | string | array $columnSpan = 'full';
+    // protected int | string | array $columnSpan = 'full';
 
     public function table(Table $table): Table
     {

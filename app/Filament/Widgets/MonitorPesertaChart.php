@@ -4,6 +4,7 @@ namespace App\Filament\Widgets;
 
 use App\Models\JenisPeserta;
 use Filament\Widgets\ChartWidget;
+use Illuminate\Support\Facades\Auth;
 
 class MonitorPesertaChart extends ChartWidget
 {
@@ -13,7 +14,14 @@ class MonitorPesertaChart extends ChartWidget
 
     protected function getData(): array
     {
-        $monitor = JenisPeserta::query()
+        $monitor = Auth::user()->role === 'instruktur' ? JenisPeserta::query()
+            ->with('user')
+            ->whereHas('aktivitas_pesertas', function ($q) {
+                $q->where('instruktur_id', Auth::user()->id);
+            })
+            ->orderBy('progress', 'asc')
+            ->take(10)
+            ->get() : JenisPeserta::query()
             ->with('user')
             ->orderBy('progress', 'asc')
             ->take(10)

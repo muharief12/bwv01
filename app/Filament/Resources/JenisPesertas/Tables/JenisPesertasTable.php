@@ -10,12 +10,23 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class JenisPesertasTable
 {
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(function (Builder $query) {
+                $user = Auth::user();
+
+                if ($user->role === 'instruktur') {
+                    $query->whereHas('aktivitas_pesertas', function ($q) use ($user) {
+                        $q->where('instruktur_id', $user->id);
+                    });
+                }
+            })
             ->columns([
                 TextColumn::make('user.name')
                     ->label('Nama Peserta')

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\AktivitasPesertas\Schemas;
 
 use App\Models\JenisPeserta;
+use App\Models\User;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -16,19 +17,27 @@ class AktivitasPesertaForm
     {
         return $schema
             ->components([
-                TextInput::make('jenis_peserta_id')
+                Select::make('jenis_peserta_id')
                     ->default(fn() => JenisPeserta::query()->where('user_id', Auth::user()->id)->where('status', 'aktif')->latest()->value('id'))
-                    ->disabled()
-                    ->required()
-                    ->numeric(),
+                    ->options(JenisPeserta::with('user')->get()->mapWithKeys(function ($item) {
+                        return [
+                            $item->id => "{$item->user->name} | {$item->jenis_peserta} | {$item->created_at->format('d M Y')}"
+                        ];
+                    }))
+                    ->searchable()
+                    ->preload()
+                    ->required(),
                 Select::make('materi_pelatihan_id')
                     ->label('Materi Pelatihan')
                     ->relationship('materi_pelatihan', 'judul')
+                    ->preload()
                     ->searchable()
                     ->required(),
                 Select::make('instruktur_id')
                     ->label('Instruktur')
-                    ->relationship('instruktur', 'name')
+                    ->options(User::where('role', 'instruktur')->pluck('name', 'id'))
+                    ->preload()
+                    ->default(Auth::user()->id)
                     ->searchable()
                     ->required(),
                 DatePicker::make('tanggal')

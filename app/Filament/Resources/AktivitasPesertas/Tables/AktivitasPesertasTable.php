@@ -34,8 +34,10 @@ class AktivitasPesertasTable
                 }
             })
             ->columns([
+                TextColumn::make('jenis_peserta.user.name')
+                    ->label('Nama Peserta')
+                    ->sortable(),
                 TextColumn::make('jenis_peserta.jenis_peserta')
-                    ->numeric()
                     ->sortable(),
                 TextColumn::make('materi_pelatihan.judul')
                     ->numeric()

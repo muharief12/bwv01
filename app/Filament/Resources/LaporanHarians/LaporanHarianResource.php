@@ -17,6 +17,7 @@ use Filament\Tables\Table;
 class LaporanHarianResource extends Resource
 {
     protected static ?string $model = LaporanHarian::class;
+    protected static bool $shouldRegisterNavigation = false;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChartBar;
 

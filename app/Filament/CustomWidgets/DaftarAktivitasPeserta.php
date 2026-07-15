@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Widgets;
+namespace App\Filament\CustomWidgets;
 
 use App\Models\AktivitasPeserta;
 use App\Models\JenisPeserta;
@@ -21,26 +21,33 @@ use Filament\Widgets\TableWidget;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Actions\Action as TableAction;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Illuminate\Support\Facades\Auth;
 
-class ProgressPeserta extends TableWidget
+class DaftarAktivitasPeserta extends TableWidget
 {
     protected static ?int $sort = 4;
-    protected static ?string $heading = 'Validasi Aktivitas Peserta';
+    protected static ?string $title = 'Daftar Akttivitas Peserta';
     protected int | string | array $columnSpan = 'full';
+
+    use InteractsWithPageFilters;
 
     public function table(Table $table): Table
     {
+        $program = $this->pageFilters['program'] ?? null;
+
+        // Pengecekan role pengguna yg sedang login
         if (Auth::user()->role === 'instruktur') {
             $q = AktivitasPeserta::query()
-                ->where('status', 'menunggu')
+                ->where('jenis_peserta_id', $program)
                 ->where('instruktur_id', Auth::user()->id)
                 ->oldest(); // created_at ASC
         } else {
             $q = AktivitasPeserta::query()
-                ->where('status', 'menunggu')
+                ->where('jenis_peserta_id', $program)
                 ->oldest(); // created_at ASC
-        }
+        };
+
         return $table
             ->query(
                 fn(): Builder => $q
