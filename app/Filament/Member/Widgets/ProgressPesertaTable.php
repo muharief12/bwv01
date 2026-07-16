@@ -15,18 +15,15 @@ use Illuminate\Support\Facades\Auth;
 class ProgressPesertaTable extends TableWidget
 {
     protected static ?int $sort = 3;
-    protected static ?string $title = 'Akttivitas Peserta Terakhir';
+    protected static ?string $heading = 'Aktivitas Menunggu Validasi';
     // protected int | string | array $columnSpan = 'full';
 
     public function table(Table $table): Table
     {
-        $jenisPesertaAktifTerbaruId = JenisPeserta::where('user_id', Auth::user()->id)->where('status', 'aktif')
-            ->latest()
-            ->value('id');
         return $table
             ->query(
                 fn(): Builder => AktivitasPeserta::query()
-                    ->where('jenis_peserta_id', JenisPeserta::where('user_id', Auth::user()->id)->where('status', 'aktif')->latest()->value('id'))
+                    ->where('jenis_peserta_id', JenisPeserta::where('user_id', Auth::user()->id)->where('status', 'menunggu')->latest()->value('id'))
                 // ->oldest() // created_at ASC)
             )
             ->columns([

@@ -34,7 +34,7 @@ class MemberStatsOverview extends StatsOverviewWidget
             Stat::make('Program Aktif', $activeProgram),
             Stat::make('Total Materi', $totalMateri),
             Stat::make('Pembelajaran Selesai', $progressDisetujui),
-            Stat::make('Pembelajaran Proses', $progressProses),
+            Stat::make('Menunggu Validasi', $progressProses),
         ];
     }
 }
