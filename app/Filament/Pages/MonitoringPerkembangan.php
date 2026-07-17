@@ -19,12 +19,13 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Auth;
 
-class MonitoringPerkembangan extends Dashboard
+class MonitoringPerkembangan extends Page
 {
     protected static string|BackedEnum|null $navigationIcon = Heroicon::ArrowTrendingUp;
     protected static ?string $navigationLabel = 'Monitoring Perkembangan';
     protected static ?int $navigationSort = 2;
     protected static ?string $title = 'Monitoring Perkembangan';
+    protected static bool $shouldRegisterNavigation = true;
 
     protected string $view = 'filament.pages.monitoring-perkembangan';
 
