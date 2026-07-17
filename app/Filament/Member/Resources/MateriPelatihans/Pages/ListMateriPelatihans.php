@@ -5,6 +5,7 @@ namespace App\Filament\Member\Resources\MateriPelatihans\Pages;
 use App\Filament\Member\Resources\MateriPelatihans\MateriPelatihanResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Support\Facades\Auth;
 
 class ListMateriPelatihans extends ListRecords
 {
@@ -12,8 +13,12 @@ class ListMateriPelatihans extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        return [
-            CreateAction::make(),
-        ];
+        if (Auth::user()->role != 'peserta') {
+            return [
+                CreateAction::make(),
+            ];
+        }
+
+        return [];
     }
 }
