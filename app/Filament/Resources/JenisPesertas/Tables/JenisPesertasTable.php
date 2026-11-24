@@ -77,6 +77,12 @@ class JenisPesertasTable
                     ->icon('heroicon-o-folder-arrow-down')
                     ->url(fn(JenisPeserta $record) => route('raport', $record))
                     ->openUrlInNewTab(),
+                Action::make('certificate')
+                    ->label('Cert. File')
+                    ->color('danger')
+                    ->icon('heroicon-o-folder-arrow-down')
+                    ->url(fn(JenisPeserta $record) => route('certificates.preview', $record))
+                    ->openUrlInNewTab(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

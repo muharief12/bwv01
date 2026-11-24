@@ -41,7 +41,19 @@ class AktivitasPesertaObserver
      */
     public function deleted(AktivitasPeserta $aktivitasPeserta): void
     {
-        //
+        if (! $aktivitasPeserta->wasChanged(['status', 'jenis_peserta_id'])) {
+            return;
+        }
+
+        $this->updateProgressJenisPeserta($aktivitasPeserta->jenis_peserta_id);
+
+        if ($aktivitasPeserta->wasChanged('jenis_peserta_id')) {
+            $oldJenisPesertaId = $aktivitasPeserta->getOriginal('jenis_peserta_id');
+
+            if ($oldJenisPesertaId) {
+                $this->updateProgressJenisPeserta($oldJenisPesertaId);
+            }
+        }
     }
 
     /**
