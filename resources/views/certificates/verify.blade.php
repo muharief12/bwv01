@@ -57,7 +57,7 @@
                 <div class="flex justify-between items-center pt-1">
                     <div>
                         <span class="text-xs text-slate-400 block">Tanggal Penyelesaian</span>
-                        <span class="text-sm font-semibold text-slate-800">{{ $completion_date }}</span>
+                        <span class="text-sm font-semibold text-slate-800">{{ $member->progress === 100 ? $completion_date : '-' }}</span>
                     </div>
                     <div class="text-right">
                         <span class="text-xs text-slate-400 block">Status Dokumen</span>
