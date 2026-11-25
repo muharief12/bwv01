@@ -29,6 +29,7 @@ class MemberPanelProvider extends PanelProvider
             ->path('member')
             ->login()
             ->registration(CustomRegister::class)
+            ->font('poppins')
             ->colors([
                 'primary' => Color::Amber,
             ])

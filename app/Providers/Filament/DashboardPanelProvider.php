@@ -30,7 +30,8 @@ class DashboardPanelProvider extends PanelProvider
             ->path('dashboard')
             ->brandName('BWV01')
             ->login()
-            ->registration(CustomRegister::class)
+            // ->registration(CustomRegister::class)
+            ->font('poppins')
             ->colors([
                 'primary' => Color::Blue,
             ])

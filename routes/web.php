@@ -2,11 +2,21 @@
 
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\RaportController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    // return view('welcome');
-    return redirect('/dashboard/login');
+    // 1. Jika belum login, langsung tampilkan halaman welcome
+    if (!Auth::check()) {
+        return view('welcome');
+    }
+
+    // 2. Jika sudah login, arahkan sesuai role pengguna
+    return match (Auth::user()->role) {
+        'peserta' => redirect('/member'),
+        'admin'   => redirect('/dashboard'), // Sesuaikan dengan URL panel admin (misal: /dashboard atau /admin)
+        default   => view('welcome'),
+    };
 });
 
 Route::get('/raport/{record}', RaportController::class)->name('raport');
