@@ -47,7 +47,7 @@ class CertificateController extends Controller
         ];
 
 
-        $pdf = Pdf::loadView('certificates.template', compact('data', 'member', 'raportSetting'))
+        $pdf = Pdf::loadView('certificates.template', compact('data', 'member'))
             ->setPaper('a4', 'landscape')
             ->setOptions([
                 'isHtml5ParserEnabled' => true,
